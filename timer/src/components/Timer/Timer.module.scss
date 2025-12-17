@@ -1,0 +1,83 @@
+@use '@/styles/vars' as vars;
+@use '@/styles/mixins' as mx;
+@use '@/styles/reset';
+
+.main {
+  background-color: vars.$bg;
+  width: vars.$screen-width;
+  @include mx.center;
+  padding: 2rem 0 5rem 0;
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    'Open Sans',
+    'Helvetica Neue',
+    sans-serif;
+}
+
+.main_time {
+  font-size: 4rem;
+  margin-bottom: 0;
+}
+
+.main_renders {
+  margin-top: vars.$divider-height;
+  margin-bottom: 0;
+  font-size: 1.25rem;
+  padding: 0 1rem;
+}
+
+.main_divider {
+  margin: vars.$divider-height;
+  height: 2px;
+  width: 90%;
+  background-color: vars.$divider-color;
+}
+
+.main_buttons {
+  @include mx.center;
+  gap: vars.$divider-height;
+}
+
+.btn {
+  height: 2rem;
+  width: 10rem;
+  border: none;
+  border-radius: 7px;
+  color: vars.$btn-txt;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn_hidden {
+  display: none;
+}
+
+.btn:hover {
+  transform: scale(1.05);
+}
+
+.button_pause {
+  background-color: vars.$pause-color;
+}
+
+.button_reset {
+  background-color: vars.$reset-color;
+}
+
+.button_play {
+  background-color: vars.$play-color;
+}
+
+@media (width < 800px) {
+  .main {
+    width: vars.$screen-adapt;
+  }
+}

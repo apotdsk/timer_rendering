@@ -1,0 +1,31 @@
+@use '@/styles/vars.scss' as vars;
+@use '@/styles/reset';
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 2.5rem;
+  background-color: vars.$bg;
+  height: 5rem;
+  width: vars.$screen-width;
+  box-sizing: border-box;
+}
+
+.header_time {
+  color: vars.$txt-color;
+  display: flex;
+  align-items: center;
+}
+
+.header_icons {
+  display: flex;
+  width: 100px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+@media (width < 800px) {
+  .header {
+    width: vars.$screen-adapt;
+  }
+}

@@ -1,0 +1,9 @@
+@use '@/styles/vars' as vars;
+@use '@/styles/mixins' as mx;
+@use '@/styles/reset';
+
+.app {
+  @include mx.center;
+  justify-content: center;
+  width: 100%;
+}
