@@ -1,7 +1,24 @@
 import styles from './Header.module.scss';
+import { useEffect, useState } from 'react';
 
 export const Header = () => {
-  const date = new Date();
+  const [date, setDate] = useState(new Date());
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const now = new Date();
+
+      setDate((prev) => {
+        if (prev.getMinutes() !== now.getMinutes()) {
+          return now;
+        }
+        return prev;
+      });
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  });
+
   return (
     <header className={styles.header}>
       <h3 className={styles.header_time}>

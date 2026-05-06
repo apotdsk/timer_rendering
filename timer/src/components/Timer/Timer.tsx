@@ -1,39 +1,79 @@
 import styles from './Timer.module.scss';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState, useRef } from 'react';
 
-export const Timer = () => {
+function useTimer() {
   const [time, setTime] = useState(new Date());
-  const [isActive, setActive] = useState(true);
+  const [isRunning, setIsRunning] = useState(true);
+  const [renderCount, setRenderCount] = useState(0);
+
+  const intervalRef = useRef<number | null>(null);
 
   useEffect(() => {
-    const interval = setInterval(() => {
+    if (!isRunning) {
+      if (intervalRef.current !== null) {
+        clearInterval(intervalRef.current);
+      }
+
+      return;
+    }
+
+    intervalRef.current = window.setInterval(() => {
       setTime(new Date());
+      setRenderCount((prev) => prev + 1);
     }, 1000);
 
     return () => {
-      clearInterval(interval);
+      if (intervalRef.current !== null) {
+        clearInterval(intervalRef.current);
+      }
     };
+  }, [isRunning]);
+
+  const formattedTime = useMemo(() => {
+    const minutes = time.getMinutes();
+    const seconds = time.getSeconds();
+
+    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  }, [time]);
+
+  const toggleTimer = useCallback(() => {
+    setIsRunning((prev) => !prev);
+    setRenderCount((prev) => prev + 1);
   }, []);
 
-  const stopTimer = () => {
-    setActive(false);
-  };
+  const resetRenderCount = useCallback(() => {
+    setRenderCount(0);
+  }, []);
 
-  const startTimer = () => {
-    setActive(true);
+  return {
+    formattedTime,
+    isRunning,
+    toggleTimer,
+    renderCount,
+    resetRenderCount,
   };
+}
+
+export const Timer = () => {
+  const {
+    formattedTime,
+    isRunning,
+    toggleTimer,
+    renderCount,
+    resetRenderCount,
+  } = useTimer();
 
   return (
     <main className={styles.main}>
-      <h1 className={styles.main_time}>
-        {String(time.getMinutes()).padStart(2, '0')}:
-        {String(time.getSeconds()).padStart(2, '0')}
-      </h1>
-      <p className={styles.main_renders}>Number of Component Renders: X</p>
+      <h1 className={styles.main_time}>{formattedTime}</h1>
+      <p className={styles.main_renders}>
+        Number of Component Renders: {renderCount}
+      </p>
       <div className={styles.main_divider}></div>
       <div className={styles.main_buttons}>
         <button
-          className={`${styles.button_pause} ${styles.btn} ${isActive ? '' : styles.btn_hidden}`}
+          onClick={toggleTimer}
+          className={`${styles.button_pause} ${styles.btn} ${isRunning ? '' : styles.btn_hidden}`}
         >
           <svg
             width="16"
@@ -50,12 +90,14 @@ export const Timer = () => {
           &nbsp;Pause
         </button>
         <button
-          className={`${styles.button_reset} ${styles.btn} ${isActive ? '' : styles.btn_hidden}`}
+          onClick={resetRenderCount}
+          className={`${styles.button_reset} ${styles.btn} ${isRunning ? '' : styles.btn_hidden}`}
         >
           Reset
         </button>
         <button
-          className={`${styles.button_play} ${styles.btn} ${isActive ? styles.btn_hidden : ''}`}
+          onClick={toggleTimer}
+          className={`${styles.button_play} ${styles.btn} ${isRunning ? styles.btn_hidden : ''}`}
         >
           <svg
             width="16"
